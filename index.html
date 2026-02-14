@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine Ultimate</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Indie+Flower&display=swap');
+body{
+  margin:0;
+  font-family:'Indie Flower', cursive;
+  background:url('nailong.png') no-repeat center top fixed;
+  background-size:cover;
+  overflow-y:auto;
+  color:#fff;
+  user-select:none;
+}
+h1,h2,h3,p{text-shadow:1px 1px 4px rgba(0,0,0,0.5);}
+button{
+  padding:12px 20px;
+  border:none;
+  border-radius:25px;
+  background:#ff69b4;
+  color:white;
+  font-size:16px;
+  margin:10px;
+  cursor:pointer;
+  box-shadow:0 0 10px rgba(255,182,193,0.5);
+  transition:0.3s;
+}
+button:hover{transform:scale(1.1);}
+.flower{
+  position:fixed;
+  font-size:20px;
+  pointer-events:none;
+  animation:fly 2s forwards;
+}
+@keyframes fly{0%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-120px);}}
+.heart{font-size:90px;animation:pulse 1s infinite;}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+.imgCenter{text-align:center;margin:20px 0;}
+.imgCenter img{max-width:90%;border-radius:15px;box-shadow:0 0 10px rgba(0,0,0,0.5);}
+.caption{font-size:16px;color:#ffe4f0;text-align:center;margin-top:5px;}
+#petBunny{position:absolute;width:100px;}
+#bunnyBox{position:relative;height:200px;margin:20px 0;}
+#popup{
+  position:fixed;top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  background: rgba(255,105,180,0.95);
+  padding:25px;border-radius:20px;
+  text-align:center;font-size:20px;z-index:9999;
+  transition:all 0.5s ease-out;
+  font-family:'Indie Flower', cursive;
+}
+#popup.show{transform:translate(-50%,-50%) scale(1);}
+#valentineBox{margin-top:20px;text-align:center;}
+</style>
+</head>
+<body>
+
+<!-- Halaman Awal -->
+<div style="text-align:center; margin-top:20px;">
+  <img src="nattsoo.png" style="width:150px; margin-bottom:10px;">
+  <h1>I love you more 💕</h1>
+  <div class="heart">❤️</div>
+  <p>Pencet kotak pesan ini 💌</p>
+  <button onclick="showMessage()">💌 Buka Kotak Pesan</button>
+  <p id="loveMsg" style="margin-top:10px; font-size:18px;"></p>
+</div>
+
+<!-- Kotak Pesan -->
+<div style="text-align:center; margin:20px;" id="messageBox" hidden>
+  <input id="nama" placeholder="Nama kamu">
+  <input id="alamat" placeholder="Alamat pengagum">
+  <br>
+  <button onclick="sendWA()">Kirim ke WA</button>
+</div>
+
+<!-- Diary Harian -->
+<div class="imgCenter">
+  <img src="oktaviana.png">
+  <div class="caption">Oktaviana tercantik & imut 💕</div>
+</div>
+<p>Flashback wanita cantik & imut menggemaskan. Umur 16 OTW 17, lahir 5-10-2009, silat & seni bela diri.</p>
+<p>Sifat: unik, random, manis, baik, lucu, ngangenin, special wle.</p>
+<p>BAGIKU: Bentuk kata <b>Istimewa</b>, makna: Oktaviana Maura (Mawar Oktober). Rasa sukaku pasih & aktif, rinduku luar biasa.</p>
+<audio id="musDiary" src="maafkanlah.mp3"></audio>
+<button onclick="playDiary()">💖 Putar Musik Diary Harian</button>
+
+<!-- I Love You Question -->
+<p style="margin-top:30px;">Kalo orang lain bilang <b>I love you</b> tentangmu, maka aku ...</p>
+<audio id="musLove" src="pemuja_rahasia.mp3"></audio>
+<button onclick="playLove()">💞 Putar Musik Pemuja Rahasia</button>
+
+<!-- NPC Random & Komentar -->
+<div id="npcText" style="margin-top:30px;">NPC: Diary kamu lucu kaya kamu 😆</div>
+<button onclick="npcTalk()">NPC Ngomong Lagi</button>
+<p id="randomComment" style="margin-top:10px;">Klik tombol buat lihat komentarku 😼</p>
+<div id="valentineBox"></div>
+
+<!-- Game Klik Hati -->
+<div style="text-align:center; margin-top:30px;">
+  <p>Klik sampai 10 💖</p>
+  <button onclick="game()">❤️</button>
+  <p id="score">Score: 0</p>
+  <div id="hadiahBox"></div>
+</div>
+
+<!-- Pet Bunny Bergerak -->
+<div id="bunnyBox">
+  <img src="Pet_Bunny.png" id="petBunny">
+</div>
+
+<!-- Foto Tambahan -->
+<div class="imgCenter">
+  <img src="oktaviana2.png">
+  <div class="caption">Senyum manis yang selalu bikin rindu 😍</div>
+</div>
+<div class="imgCenter">
+  <img src="badmood.png">
+  <div class="caption">Waduh badmood 😓 tapi tetep cute</div>
+</div>
+
+<div id="popup">🍫 Kamu menang! Coklat untukmu 💖</div>
+
+<script>
+/* Single Play Music */
+const musDiary=document.getElementById('musDiary');
+const musLove=document.getElementById('musLove');
+function playDiary(){musLove.pause(); musLove.currentTime=0; musDiary.play();}
+function playLove(){musDiary.pause(); musDiary.currentTime=0; musLove.play();}
+
+/* Kotak Pesan WA */
+function showMessage(){
+  document.getElementById('messageBox').hidden=false;
+  document.getElementById('loveMsg').innerText="I love you untuk orang tercantik yang aku cintai di bumi 💕";
+}
+function sendWA(){
+  let nama=document.getElementById('nama').value;
+  let alamat=document.getElementById('alamat').value;
+  let msg=`Hai 💖%0ANama: ${nama}%0AAlamat Pengagum: ${alamat}`;
+  window.open("https://wa.me/6289516129314?text="+msg);
+}
+
+/* NPC & komentar random + munculin screenshot otomatis */
+let npcLines=[
+  "Diary kamu lucu kaya kamu 😆",
+  "Aku suka cara kamu nulis perasaan 💕",
+  "Kamu itu NPC favorit di hidupku 😼",
+  "Kalau cinta itu game, kamu final boss 💖",
+  "Jangan berhenti nulis ya, lucu soalnya 🌸"
+];
+let comments=[
+  "Kamu lucu pas tantrum 😆",
+  "Mood kamu susah ditebak tapi bikin kangen 💗",
+  "Kalau kamu marah malah makin imut 😼",
+  "Kamu unik, random tapi bikin nyaman 😳",
+  "Tantrum kamu kayak drama Valentine 🌸",
+  "Ngambek kamu tuh minta diperhatiin 🥺",
+  "Susah nebak pikiranmu, gampang jatuh cinta sama senyummu 💞",
+  "Kamu marah tapi tetap mikirin orang lain 💖",
+  "Aku suka kamu yang random 😝",
+  "Kamu paket lengkap: tantrum, lucu, misterius 💐"
+];
+function npcTalk(){
+  let r=Math.floor(Math.random()*npcLines.length);
+  let c=Math.floor(Math.random()*comments.length);
+  document.getElementById("npcText").innerText="NPC: "+npcLines[r];
+  document.getElementById("randomComment").innerText=comments[c];
+  // munculin screenshot otomatis
+  let valBox=document.getElementById('valentineBox');
+  valBox.innerHTML='<div class="imgCenter"><img src="screenshot.png"><div class="caption">💖 Hadiah Valentine Random!</div></div>';
+}
+
+/* Mini Game */
+let skor=0;
+function game(){
+  skor++;
+  document.getElementById("score").innerText="Score: "+skor;
+  if(skor>=10){
+    document.getElementById("popup").classList.add("show");
+    let hadiah=document.createElement("p");
+    hadiah.innerText="🎁 Hadiah Screenshot untukmu!";
+    document.getElementById("hadiahBox").appendChild(hadiah);
+    setTimeout(()=>{document.getElementById("popup").classList.remove("show");},2500);
+    skor=0; document.getElementById("score").innerText="Score: 0";
+  }
+}
+
+/* Pet Bunny Bergerak */
+let bunny=document.getElementById("petBunny");
+let box=document.getElementById("bunnyBox");
+function moveBunny(){
+  let boxWidth=box.clientWidth-bunny.clientWidth;
+  let boxHeight=box.clientHeight-bunny.clientHeight;
+  let left=Math.random()*boxWidth;
+  let top=Math.random()*boxHeight;
+  bunny.style.left=left+"px";
+  bunny.style.top=top+"px";
+}
+setInterval(moveBunny,1500);
+
+/* Efek bunga saat klik */
+document.addEventListener("click",function(e){
+  for(let i=0;i<5;i++){
+    let f=document.createElement("div");
+    f.innerHTML="🌸";
+    f.className="flower";
+    f.style.left=(e.clientX+Math.random()*40-20)+"px";
+    f.style.top=(e.clientY+Math.random()*40-20)+"px";
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),2000);
+  }
+});
+</script>
+
+</body>
+</html>
